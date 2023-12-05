@@ -29,6 +29,7 @@ sudo apt-get update && sudo apt-get upgrade
 sudo apt install ros-humble-desktop
 sudo apt install ros-humble-ros-base
 sudo apt install ros-dev-tools
+sudo apt-get install xfce4*
 
 # Replace ".bash" with your shell if you're not using bash
 # Possible values are: setup.bash, setup.sh, setup.zsh
@@ -124,8 +125,6 @@ echo 'export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/ardupilot_gazebo/build:${GZ_SIM_SYS
 echo 'export GZ_SIM_RESOURCE_PATH=$HOME/ardupilot_gazebo/models:$HOME/ardupilot_gazebo/worlds:${GZ_SIM_RESOURCE_PATH}' >> ~/.bashrc
 
 source ~/.bashrc
-
-
 
 
 
