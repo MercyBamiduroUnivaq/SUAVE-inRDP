@@ -61,12 +61,11 @@ chmod +x Tools/environment_install/install-prereqs-ubuntu.sh
 Tools/environment_install/install-prereqs-ubuntu.sh -y
 . ~/.profile
 
-#Trying ardu pilot
-sim_vehicle.py -v ArduSub -L RATBeach --console --map
-
-
 #ArduPilot Plug-in
 sudo apt install libgz-sim7-dev rapidjson-dev
+
+#Trying ardu pilot
+sim_vehicle.py -v ArduSub -L RATBeach --console --map
 
 cd ~/
 git clone https://github.com/ArduPilot/ardupilot_gazebo
@@ -75,10 +74,7 @@ mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
 make -j4
 
-echo 'export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/ardupilot_gazebo/build:${GZ_SIM_SYSTEM_PLUGIN_PATH}' >> ~/.bashrc
-echo 'export GZ_SIM_RESOURCE_PATH=$HOME/ardupilot_gazebo/models:$HOME/ardupilot_gazebo/worlds:${GZ_SIM_RESOURCE_PATH}' >> ~/.bashrc
 
-source ~/.bashrc
 
 
 
@@ -104,15 +100,30 @@ export GZ_VERSION="garden"
 
 source /opt/ros/humble/setup.bash
 cd ~/suave_ws/
+sudo rosdep init
+rosdep update
 rosdep install --from-paths src --ignore-src -r -y
 
 cd ~/suave_ws/
-colcon build --symlink-install
 
+#Colcon fix ament (depedency issue)
+# Source ROS 2 setup file
+source /opt/ros/humble/setup.bash 
+rosdep install --from-paths src --ignore-src --rosdistro humble -y # Install dependencies
+
+# Build the workspace
+colcon build --symlink-install
 colcon build --symlink-install --executor sequential --parallel-workers 1
 
 wget https://raw.githubusercontent.com/mavlink/mavros/master/mavros/scripts/install_geographiclib_datasets.sh
 sudo bash ./install_geographiclib_datasets.sh
+
+
+#Continue Ardu pilot
+echo 'export GZ_SIM_SYSTEM_PLUGIN_PATH=$HOME/ardupilot_gazebo/build:${GZ_SIM_SYSTEM_PLUGIN_PATH}' >> ~/.bashrc
+echo 'export GZ_SIM_RESOURCE_PATH=$HOME/ardupilot_gazebo/models:$HOME/ardupilot_gazebo/worlds:${GZ_SIM_RESOURCE_PATH}' >> ~/.bashrc
+
+source ~/.bashrc
 
 
 
